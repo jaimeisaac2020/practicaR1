@@ -77,3 +77,65 @@ reticulate::conda_install(packages = "numpy")
 import numpy as np
 ```
 
+```{r}
+library(readxl)
+CEP<-read_excel("D:/CEP_sep-oct_2017.xlsx",sheet=2)
+head(CEP)
+
+```
+```{r}
+library(dplyr)
+CEP1=select(CEP,pond=POND,sexo=SEXO,
+            region=REGION,edad=DS_P2_EXACTA,
+           satisfaccion_vida=SV_1,satisfaccion_chilenos=SV_2,eval_econ=MB_P2 )
+CEP1
+```
+```{r}
+class(CEP1$sexo)
+```
+```{r}
+table(CEP1$sexo)
+```
+
+
+
+```{r}
+library(dplyr)
+CEP2<-mutate(CEP1, sexo_chr = dplyr::recode(CEP1$sexo, '1' = "hombre", '2' = "mujer"))
+table(CEP2$sexo_chr)
+```
+
+```{r}
+CEP3 <- mutate(CEP2, sexo_factor = factor(CEP2$sexo, 
+                                        labels = c("Hombre", "Mujer")))
+
+```
+```{r}
+class(CEP3$sexo_factor)
+```
+
+```{r}
+table(CEP3$region)
+```
+```{r}
+library(knitr)
+kable(table(CEP3$region))
+
+```
+```{r}
+class(CEP3$region)
+```
+```{r}
+library(car)
+CEP <- mutate(CEP3, region_factor = car::recode(CEP3$region, "1:12 = 1; 13 = 2; 14:15 = 1"))
+
+```
+```{r}
+
+```
+
+```{r}
+class(CEP$region_factor)
+```
+
+
