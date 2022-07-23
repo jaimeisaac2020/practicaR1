@@ -137,5 +137,14 @@ CEP <- mutate(CEP3, region_factor = car::recode(CEP3$region, "1:12 = 1; 13 = 2; 
 ```{r}
 class(CEP$region_factor)
 ```
+```{r}
+library(VIM)
+library(ggplot2)
+head(msleep)
+```
 
+```{r}
+newdata<-kNN(msleep,k=5)
+head(newdata)
+```
 
