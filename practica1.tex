@@ -1,183 +1,738 @@
----
-documentclass: article
-title: "practica1"
-output: pdf_document
-date: '2022-07-07'
-header-includes:
-- \usepackage[utf8]{inputenc}
-- \usepackage{graphicx}
-- \usepackage[labelfont=bf]{caption}
-- \usepackage{longtable}
-- \usepackage{float}
-- \usepackage{fancyhdr}
-- \usepackage{fancyheadings}
-- \pagestyle{fancy}
-- \lhead{\scriptsize Manual de R para el científico de datos}
-- \chead{}
-- \rhead{\scriptsize \leftmark}
-- \lfoot{\textit{www.gritos.org}}
-#- \cfoot{\includegraphics[height=0.08\textwidth]{imag/logo1.jpg}}
-- \rfoot{\thepage}
-#title: "Manual de R para el científico de datos"
-author: "Jaime"
-#date: 2017
-#language: ES-es
-lang: es-ES
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={practica1},
+  pdfauthor={Jaime},
+  pdflang={es-ES},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{spanish}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[labelfont=bf]{caption}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{fancyheadings}
+\pagestyle{fancy}
+\lhead{\scriptsize Manual de R para el científico de datos}
+\chead{}
+\rhead{\scriptsize \leftmark}
+\lfoot{\textit{www.gritos.org}}
+\rfoot{\thepage}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
+\title{practica1}
+\author{Jaime}
+\date{2022-07-07}
 
----
+\begin{document}
+\maketitle
+
 \newpage
 \tableofcontents
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mtcars[}\FunctionTok{order}\NormalTok{(mtcars}\SpecialCharTok{$}\NormalTok{gear,mtcars}\SpecialCharTok{$}\NormalTok{mpg),]}
+\end{Highlighting}
+\end{Shaded}
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-```{r}
-mtcars[order(mtcars$gear,mtcars$mpg),]
-```
-# Jaime
-```{r}
-library(dplyr)
-arrange(.data=mtcars,mtcars$gear,mtcars$mpg)
-```
-## isaac
-### Pena
-```{r}
-small_mtcars <-
-mtcars %>%
-arrange(gear) %>%
-slice(1:10)
-small_mtcars
-```
-```{r}
-library(ggplot2)
-ggplot(mtcars, aes(x = wt, y = mpg)) +
-geom_point() +
-geom_smooth(method = lm)
-```
-```{r}
-#install.packages("pacman")
-library(pacman)
-p_load(ggplot2, ggthemes, dplyr, readr)
-```
-```{r}
-chilean_exports <- "year,product,export,percentage
-2006,copper,4335009500,81
-2006,others,1016726518,19
-2007,copper,9005361914,86
-2007,others,1523085299,14
-2008,copper,6907056354,80
-2008,others,1762684216,20
-2009,copper,10529811075,81
-2009,others,2464094241,19
-2010,copper,14828284450,85
-2010,others,2543015596,15
-2011,copper,15291679086,82
-2011,others,3447972354,18
-2012,copper,14630686732,80
-2012,others,3583968218,20
-2013,copper,15244038840,79
-2013,others,4051281128,21
-2014,copper,14703374241,78
-2014,others,4251484600,22
-2015,copper,13155922363,78
-2015,others,3667286912,22"
-exports_data <- read_csv(chilean_exports)
-```
-```{r}
-exports_data
-```
+\begin{verbatim}
+##                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+## Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+## Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+## Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+## Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+## Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+## AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+## Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+## Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+## Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+## Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+## Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+## Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+## Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+## Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+## Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+## Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+## Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+## Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+## Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+## Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+## Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+## Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+## Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+## Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+## Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+## Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+## Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+## Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+## Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+## Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+\end{verbatim}
 
-```{r}
-p1 <- ggplot(aes(y = export, x = year, colour = product), data = exports_data) +
-geom_line()
-p1
-```
-```{r}
-library(reticulate)
-```
-```{r}
-reticulate::conda_install(packages = "numpy")
-```
+\hypertarget{jaime}{%
+\section{Jaime}\label{jaime}}
 
-```{python}
-import numpy as np
-```
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
 
-```{r}
-library(readxl)
-CEP<-read_excel("D:/CEP_sep-oct_2017.xlsx",sheet=2)
-head(CEP)
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
 
-```
-```{r}
-library(dplyr)
-CEP1=select(CEP,pond=POND,sexo=SEXO,
-            region=REGION,edad=DS_P2_EXACTA,
-           satisfaccion_vida=SV_1,satisfaccion_chilenos=SV_2,eval_econ=MB_P2 )
-CEP1
-```
-```{r}
-class(CEP1$sexo)
-```
-```{r}
-table(CEP1$sexo)
-```
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
 
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{arrange}\NormalTok{(}\AttributeTok{.data=}\NormalTok{mtcars,mtcars}\SpecialCharTok{$}\NormalTok{gear,mtcars}\SpecialCharTok{$}\NormalTok{mpg)}
+\end{Highlighting}
+\end{Shaded}
 
-```{r}
-library(dplyr)
-CEP2<-mutate(CEP1, sexo_chr = dplyr::recode(CEP1$sexo, '1' = "hombre", '2' = "mujer"))
-table(CEP2$sexo_chr)
-```
+\begin{verbatim}
+##                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+## Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+## Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+## Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+## Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+## Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+## AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+## Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+## Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+## Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+## Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+## Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+## Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+## Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+## Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+## Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+## Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+## Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+## Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+## Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+## Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+## Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+## Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+## Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+## Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+## Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+## Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+## Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+## Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+## Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+## Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+\end{verbatim}
 
-```{r}
-CEP3 <- mutate(CEP2, sexo_factor = factor(CEP2$sexo, 
-                                        labels = c("Hombre", "Mujer")))
+\hypertarget{isaac}{%
+\subsection{isaac}\label{isaac}}
 
-```
-```{r}
-class(CEP3$sexo_factor)
-```
+\hypertarget{pena}{%
+\subsubsection{Pena}\label{pena}}
 
-```{r}
-table(CEP3$region)
-```
-```{r}
-library(knitr)
-kable(table(CEP3$region))
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{small\_mtcars }\OtherTok{\textless{}{-}}
+\NormalTok{mtcars }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{arrange}\NormalTok{(gear) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{)}
+\NormalTok{small\_mtcars}
+\end{Highlighting}
+\end{Shaded}
 
-```
-```{r}
-class(CEP3$region)
-```
-```{r}
-library(car)
-CEP <- mutate(CEP3, region_factor = car::recode(CEP3$region, "1:12 = 1; 13 = 2; 14:15 = 1"))
+\begin{verbatim}
+##                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+## Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+## Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+## Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+## Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+## Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+## Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+## Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+## Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+\end{verbatim}
 
-```
-```{r}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{ggplot}\NormalTok{(mtcars, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ wt, }\AttributeTok{y =}\NormalTok{ mpg)) }\SpecialCharTok{+}
+\FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+\FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =}\NormalTok{ lm)}
+\end{Highlighting}
+\end{Shaded}
 
-```
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
 
-```{r}
-class(CEP$region_factor)
-```
-```{r}
-library(VIM)
-library(ggplot2)
-head(msleep)
-```
+\includegraphics{practica1_files/figure-latex/unnamed-chunk-4-1.pdf}
 
-```{r}
-newdata<-kNN(msleep,k=5)
-head(newdata)
-```
-% Please add the following required packages to your document preamble:
-% \usepackage{longtable}
-% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("pacman")}
+\FunctionTok{library}\NormalTok{(pacman)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'pacman' was built under R version 4.2.1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{p\_load}\NormalTok{(ggplot2, ggthemes, dplyr, readr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{chilean\_exports }\OtherTok{\textless{}{-}} \StringTok{"year,product,export,percentage}
+\StringTok{2006,copper,4335009500,81}
+\StringTok{2006,others,1016726518,19}
+\StringTok{2007,copper,9005361914,86}
+\StringTok{2007,others,1523085299,14}
+\StringTok{2008,copper,6907056354,80}
+\StringTok{2008,others,1762684216,20}
+\StringTok{2009,copper,10529811075,81}
+\StringTok{2009,others,2464094241,19}
+\StringTok{2010,copper,14828284450,85}
+\StringTok{2010,others,2543015596,15}
+\StringTok{2011,copper,15291679086,82}
+\StringTok{2011,others,3447972354,18}
+\StringTok{2012,copper,14630686732,80}
+\StringTok{2012,others,3583968218,20}
+\StringTok{2013,copper,15244038840,79}
+\StringTok{2013,others,4051281128,21}
+\StringTok{2014,copper,14703374241,78}
+\StringTok{2014,others,4251484600,22}
+\StringTok{2015,copper,13155922363,78}
+\StringTok{2015,others,3667286912,22"}
+\NormalTok{exports\_data }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(chilean\_exports)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 20 Columns: 4
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr (1): product
+## dbl (3): year, export, percentage
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{exports\_data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 20 x 4
+##     year product      export percentage
+##    <dbl> <chr>         <dbl>      <dbl>
+##  1  2006 copper   4335009500         81
+##  2  2006 others   1016726518         19
+##  3  2007 copper   9005361914         86
+##  4  2007 others   1523085299         14
+##  5  2008 copper   6907056354         80
+##  6  2008 others   1762684216         20
+##  7  2009 copper  10529811075         81
+##  8  2009 others   2464094241         19
+##  9  2010 copper  14828284450         85
+## 10  2010 others   2543015596         15
+## 11  2011 copper  15291679086         82
+## 12  2011 others   3447972354         18
+## 13  2012 copper  14630686732         80
+## 14  2012 others   3583968218         20
+## 15  2013 copper  15244038840         79
+## 16  2013 others   4051281128         21
+## 17  2014 copper  14703374241         78
+## 18  2014 others   4251484600         22
+## 19  2015 copper  13155922363         78
+## 20  2015 others   3667286912         22
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p1 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ export, }\AttributeTok{x =}\NormalTok{ year, }\AttributeTok{colour =}\NormalTok{ product), }\AttributeTok{data =}\NormalTok{ exports\_data) }\SpecialCharTok{+}
+\FunctionTok{geom\_line}\NormalTok{()}
+\NormalTok{p1}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{practica1_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(reticulate)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'reticulate' was built under R version 4.2.1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{reticulate}\SpecialCharTok{::}\FunctionTok{conda\_install}\NormalTok{(}\AttributeTok{packages =} \StringTok{"numpy"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## + "C:/Users/jipm1/AppData/Local/r-miniconda/condabin/conda.bat" "install" "--yes" "--name" "r-reticulate" "-c" "conda-forge" "numpy"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(readxl)}
+\NormalTok{CEP}\OtherTok{\textless{}{-}}\FunctionTok{read\_excel}\NormalTok{(}\StringTok{"D:/CEP\_sep{-}oct\_2017.xlsx"}\NormalTok{,}\AttributeTok{sheet=}\DecValTok{2}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(CEP)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 220
+##   VOTACION_1 VOTACIO~1 VOTAC~2 VOTAC~3  SV_1  SV_2 MB_P1_1 MB_P1_2 MB_P1_3 MB_P2
+##        <dbl>     <dbl>   <dbl>   <dbl> <dbl> <dbl>   <dbl>   <dbl>   <dbl> <dbl>
+## 1         10         4       4       4     8     3       3       5       7     1
+## 2          2         3       3       3    10     5      10       1       2     2
+## 3          8         5       1       5    10    10      11      10       7     4
+## 4          7         2       2       2     8     5       7      12       6     3
+## 5          7         2       2       2     5     5      13       1      11     2
+## 6          7         2       2       2     9     5      11       1       5     2
+## # ... with 210 more variables: MB_P3 <dbl>, MB_P4 <dbl>, MB_P5 <dbl>,
+## #   MB_P6 <dbl>, MB_P7 <dbl>, MB_P8 <dbl>, MB_P9 <dbl>, MB_P10 <dbl>,
+## #   MB_P11 <dbl>, MB_P12 <dbl>, MB_P12A <dbl>, MB_P13 <dbl>, MB_P13A <dbl>,
+## #   MB_P14 <dbl>, MB_P14A <dbl>, MB_P15_A <dbl>, MB_P15_B <dbl>,
+## #   MB_P15_C <dbl>, MB_P15_D <dbl>, MB_P15_E <dbl>, MB_P15_F <dbl>,
+## #   MB_P15_G <dbl>, MB_P15_H <dbl>, MB_P15_I <dbl>, MB_P15_J <dbl>,
+## #   MB_P15_K <dbl>, MB_P15_L <dbl>, MB_P15_M <dbl>, MB_P15_N <dbl>, ...
+## # i Use `colnames()` to see all variable names
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\NormalTok{CEP1}\OtherTok{=}\FunctionTok{select}\NormalTok{(CEP,}\AttributeTok{pond=}\NormalTok{POND,}\AttributeTok{sexo=}\NormalTok{SEXO,}
+            \AttributeTok{region=}\NormalTok{REGION,}\AttributeTok{edad=}\NormalTok{DS\_P2\_EXACTA,}
+           \AttributeTok{satisfaccion\_vida=}\NormalTok{SV\_1,}\AttributeTok{satisfaccion\_chilenos=}\NormalTok{SV\_2,}\AttributeTok{eval\_econ=}\NormalTok{MB\_P2 )}
+\NormalTok{CEP1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,424 x 7
+##     pond  sexo region  edad satisfaccion_vida satisfaccion_chilenos eval_econ
+##    <dbl> <dbl>  <dbl> <dbl>             <dbl>                 <dbl>     <dbl>
+##  1 1.34      2     13    18                 8                     3         1
+##  2 1.27      2      1    57                10                     5         2
+##  3 0.605     2     14    25                10                    10         4
+##  4 1.03      2     13    37                 8                     5         3
+##  5 0.675     2     14    50                 5                     5         2
+##  6 0.292     2      8    60                 9                     5         2
+##  7 0.694     2      9    66                 9                     5         4
+##  8 1.34      2     13    19                 6                     8         2
+##  9 0.787     2      7    34                 6                     7         3
+## 10 1.03      2     13    39                10                    10         3
+## # ... with 1,414 more rows
+## # i Use `print(n = ...)` to see more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(CEP1}\SpecialCharTok{$}\NormalTok{sexo)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{table}\NormalTok{(CEP1}\SpecialCharTok{$}\NormalTok{sexo)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##   1   2 
+## 553 871
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\NormalTok{CEP2}\OtherTok{\textless{}{-}}\FunctionTok{mutate}\NormalTok{(CEP1, }\AttributeTok{sexo\_chr =}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{recode}\NormalTok{(CEP1}\SpecialCharTok{$}\NormalTok{sexo, }\StringTok{\textquotesingle{}1\textquotesingle{}} \OtherTok{=} \StringTok{"hombre"}\NormalTok{, }\StringTok{\textquotesingle{}2\textquotesingle{}} \OtherTok{=} \StringTok{"mujer"}\NormalTok{))}
+\FunctionTok{table}\NormalTok{(CEP2}\SpecialCharTok{$}\NormalTok{sexo\_chr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## hombre  mujer 
+##    553    871
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CEP3 }\OtherTok{\textless{}{-}} \FunctionTok{mutate}\NormalTok{(CEP2, }\AttributeTok{sexo\_factor =} \FunctionTok{factor}\NormalTok{(CEP2}\SpecialCharTok{$}\NormalTok{sexo, }
+                                        \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Hombre"}\NormalTok{, }\StringTok{"Mujer"}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(CEP3}\SpecialCharTok{$}\NormalTok{sexo\_factor)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "factor"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{table}\NormalTok{(CEP3}\SpecialCharTok{$}\NormalTok{region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15 
+##  24  57  24  52 150  82  94 192  98  69   5  17 501  39  20
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(knitr)}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{table}\NormalTok{(CEP3}\SpecialCharTok{$}\NormalTok{region))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule
+Var1 & Freq \\
+\midrule
+\endhead
+1 & 24 \\
+2 & 57 \\
+3 & 24 \\
+4 & 52 \\
+5 & 150 \\
+6 & 82 \\
+7 & 94 \\
+8 & 192 \\
+9 & 98 \\
+10 & 69 \\
+11 & 5 \\
+12 & 17 \\
+13 & 501 \\
+14 & 39 \\
+15 & 20 \\
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(CEP3}\SpecialCharTok{$}\NormalTok{region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(car)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'car' was built under R version 4.2.1
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: carData
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'carData' was built under R version 4.2.1
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'car'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     recode
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CEP }\OtherTok{\textless{}{-}} \FunctionTok{mutate}\NormalTok{(CEP3, }\AttributeTok{region\_factor =}\NormalTok{ car}\SpecialCharTok{::}\FunctionTok{recode}\NormalTok{(CEP3}\SpecialCharTok{$}\NormalTok{region, }\StringTok{"1:12 = 1; 13 = 2; 14:15 = 1"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(CEP}\SpecialCharTok{$}\NormalTok{region\_factor)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(VIM)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'VIM' was built under R version 4.2.1
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: colorspace
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: grid
+\end{verbatim}
+
+\begin{verbatim}
+## VIM is ready to use.
+\end{verbatim}
+
+\begin{verbatim}
+## Suggestions and bug-reports can be submitted at: https://github.com/statistikat/VIM/issues
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'VIM'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:datasets':
+## 
+##     sleep
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{head}\NormalTok{(msleep)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 11
+##   name  genus vore  order conse~1 sleep~2 sleep~3 sleep~4 awake  brainwt  bodywt
+##   <chr> <chr> <chr> <chr> <chr>     <dbl>   <dbl>   <dbl> <dbl>    <dbl>   <dbl>
+## 1 Chee~ Acin~ carni Carn~ lc         12.1    NA    NA      11.9 NA        50    
+## 2 Owl ~ Aotus omni  Prim~ <NA>       17       1.8  NA       7    0.0155    0.48 
+## 3 Moun~ Aplo~ herbi Rode~ nt         14.4     2.4  NA       9.6 NA         1.35 
+## 4 Grea~ Blar~ omni  Sori~ lc         14.9     2.3   0.133   9.1  0.00029   0.019
+## 5 Cow   Bos   herbi Arti~ domest~     4       0.7   0.667  20    0.423   600    
+## 6 Thre~ Brad~ herbi Pilo~ <NA>       14.4     2.2   0.767   9.6 NA         3.85 
+## # ... with abbreviated variable names 1: conservation, 2: sleep_total,
+## #   3: sleep_rem, 4: sleep_cycle
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{newdata}\OtherTok{\textless{}{-}}\FunctionTok{kNN}\NormalTok{(msleep,}\AttributeTok{k=}\DecValTok{5}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(newdata)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                         name      genus  vore        order conservation
+## 1                    Cheetah   Acinonyx carni    Carnivora           lc
+## 2                 Owl monkey      Aotus  omni     Primates           lc
+## 3            Mountain beaver Aplodontia herbi     Rodentia           nt
+## 4 Greater short-tailed shrew    Blarina  omni Soricomorpha           lc
+## 5                        Cow        Bos herbi Artiodactyla domesticated
+## 6           Three-toed sloth   Bradypus herbi       Pilosa           vu
+##   sleep_total sleep_rem sleep_cycle awake brainwt  bodywt name_imp genus_imp
+## 1        12.1       0.7   0.3833333  11.9 0.01750  50.000    FALSE     FALSE
+## 2        17.0       1.8   0.1833333   7.0 0.01550   0.480    FALSE     FALSE
+## 3        14.4       2.4   0.2166667   9.6 0.00100   1.350    FALSE     FALSE
+## 4        14.9       2.3   0.1333333   9.1 0.00029   0.019    FALSE     FALSE
+## 5         4.0       0.7   0.6666667  20.0 0.42300 600.000    FALSE     FALSE
+## 6        14.4       2.2   0.7666667   9.6 0.00400   3.850    FALSE     FALSE
+##   vore_imp order_imp conservation_imp sleep_total_imp sleep_rem_imp
+## 1    FALSE     FALSE            FALSE           FALSE          TRUE
+## 2    FALSE     FALSE             TRUE           FALSE         FALSE
+## 3    FALSE     FALSE            FALSE           FALSE         FALSE
+## 4    FALSE     FALSE            FALSE           FALSE         FALSE
+## 5    FALSE     FALSE            FALSE           FALSE         FALSE
+## 6    FALSE     FALSE             TRUE           FALSE         FALSE
+##   sleep_cycle_imp awake_imp brainwt_imp bodywt_imp
+## 1            TRUE     FALSE        TRUE      FALSE
+## 2            TRUE     FALSE       FALSE      FALSE
+## 3            TRUE     FALSE        TRUE      FALSE
+## 4           FALSE     FALSE       FALSE      FALSE
+## 5           FALSE     FALSE       FALSE      FALSE
+## 6           FALSE     FALSE        TRUE      FALSE
+\end{verbatim}
+
+\% Please add the following required packages to your document preamble:
+\%
+
+\usepackage{longtable}
+
+\% Note: It may be necessary to compile the document several times to
+get a multi-page table to line up properly
+
 \begin{longtable}[c]{llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll}
 VOTACION\_1 & VOTACION\_2 & VOTACION\_3 & VOTACION\_4 & SV\_1 & SV\_2 & MB\_P1\_1 & MB\_P1\_2 & MB\_P1\_3 & MB\_P2 & MB\_P3 & MB\_P4 & MB\_P5 & MB\_P6 & MB\_P7 & MB\_P8 & MB\_P9 & MB\_P10 & MB\_P11 & MB\_P12 & MB\_P12A & MB\_P13 & MB\_P13A & MB\_P14 & MB\_P14A & MB\_P15\_A & MB\_P15\_B & MB\_P15\_C & MB\_P15\_D & MB\_P15\_E & MB\_P15\_F & MB\_P15\_G & MB\_P15\_H & MB\_P15\_I & MB\_P15\_J & MB\_P15\_K & MB\_P15\_L & MB\_P15\_M & MB\_P15\_N & MB\_P15\_O & MB\_P15\_P & MB\_P15\_Q & MB\_P15\_R & MB\_P15\_S & MB\_P15\_T & MB\_P15\_U & MB\_P15\_V & MB\_P15\_W & MB\_P15\_X & MB\_P15\_Y & MB\_P15\_Z & MB\_P16 & MB\_P17 & MB\_P18 & ELE\_1 & ELE\_2 & ELE\_3 & ELE\_4 & ELE\_5 & ELE\_6\_1 & ELE\_6\_2 & ELE\_6\_3 & ELE\_6\_4 & ELE\_6\_5 & ELE\_6\_6 & ELE\_6\_7 & PE\_E0 & MEP\_1 & MEP\_2 & MEP\_3 & MEP\_4 & MEP\_5\_1 & MEP\_5\_2 & MEP\_5\_3 & MEP\_5\_4 & MEP\_5\_5 & MEP\_5\_6 & MEP\_5\_7 & MEP\_5\_8 & MEP\_6 & MEP\_7 & MEP\_8 & MEP\_9\_1 & MEP\_9\_2 & MEP\_9\_3 & MEP\_9\_4 & MEP\_9\_5 & MEP\_9\_6 & MEP\_10\_1 & MEP\_10\_2 & DPP\_1 & DPP\_2 & DPP\_3\_1 & DPP\_3\_2 & DPP\_3\_3 & DPP\_4 & DPP\_5A & DPP\_5B & DPP\_5C & DPP\_6A & DPP\_6B & DPP\_6C & DPP\_7A & DPP\_7B & DPP\_7C & DPP\_8A & DPP\_8B & DPP\_8C & DPP\_9A & DPP\_9B & DPP\_9C & DPP\_10A & DPP\_10B & DPP\_10C & DPP\_11 & DPP\_12A & DPP\_12B & DPP\_12C & DPP\_13A & DPP\_13B & DPP\_13C & DPP\_14 & DPP\_15A & DPP\_15B & DPP\_15C & DPP\_16A & DPP\_16B & DPP\_16C & DPP\_16D & DPP\_17A & DPP\_17B & DPP\_17C & DPP\_17D & DPP\_18A & DPP\_18B & DPP\_18C & DPP\_18D & DPP\_19A & DPP\_19B & DPP\_19C & DPP\_19D & DPP\_20\_1 & DPP\_20\_2 & DPP\_20\_3 & DPP\_20\_4 & DPP\_20\_5 & DPP\_20\_6 & DPP\_20\_7 & DPP\_20\_8 & DPP\_21\_1 & DPP\_21\_2 & DPP\_21\_3 & DPP\_21\_4 & DPP\_22\_1 & DPP\_22\_2 & DPP\_23\_1 & DPP\_23\_2 & DPP\_23\_3 & DPP\_23\_4 & DPP\_23\_5 & DPP\_23\_6 & DPP\_23\_7 & DS\_P1 & DS\_P2 & DS\_P2\_EXACTA & DS\_P2A\_DIA & DS\_P2A\_MES & DS\_P2A\_ANO & DS\_P3 & DS\_P4 & DS\_P5 & DS\_P6 & DS\_P7 & DS\_P8 & DS\_P9 & DS\_P10 & DS\_P10\_OTRA & DS\_P11 & DS\_P12 & DS\_P13 & DS\_P14A & DS\_P14A\_EXACTA & DS\_P14B & DS\_P14B\_EXACTA & DS\_P14C & DS\_P14C\_EXACTA & DS\_P15 & DS\_P16 & DS\_P17 & DS\_P18 & DS\_P19 & DS\_P20\_1 & DS\_P20\_2 & DS\_P20\_3 & DS\_P20\_4 & DS\_P20\_5 & DS\_P20\_6 & DS\_P20\_7 & DS\_P20\_8 & DS\_P20\_9 & DS\_P20\_10 & DS\_P20\_11 & DS\_P20\_12 & DS\_P20\_13 & DS\_P20\_14 & DS\_P20\_15 & DS\_P20\_16 & DS\_P20\_17 & DS\_P21\_1 & DS\_P21\_2 & NOM\_COMUNA & SEXO & EDAD\_REC & REGION & POND & ZONA\_U\_R & GSE\_REC & DPP\_11\_REC & ANOS\_REC & REGION\_REC \\
 \endfirsthead
@@ -215,4 +770,4 @@ VOTACION\_1 & VOTACION\_2 & VOTACION\_3 & VOTACION\_4 & SV\_1 & SV\_2 & MB\_P1\_
 8 & 1 & 1 & 4 & 7 & 3 & 3 & 4 & 16 & 3 & 2 & 2 & 3 & 2 & 2 & 2 & 2 & 1 & 2 & 88 & 4 & 5 & 8 & 6 & 6 & 2 & 6 & 4 & 6 & 6 & 6 & 3 & 6 & 6 & 6 & 2 & 4 & 4 & 3 & 6 & 3 & 6 & 6 & 6 & 4 & 2 & 4 & 6 & 6 & 4 & 2 & 1 & 8 & 8 & 1 & 2 & 2 & 3 & 1 & 2 & 3 & 3 & 2 & 2 & 3 & 3 & 9 & 8 & 7 & 10 & 8 & 9 & 3 & 3 & 2 & 8 & 8 & 8 & 1 & 8 & 4 & 4 & 4 & 4 & 8 & 8 & 4 & 8 & 10 & 2 & 3 & 1 & 2 & 2 & 3 & 3 & 1 & 999 & 999 & 1 & \#¡NULO! & \#¡NULO! & 60 & \#¡NULO! & \#¡NULO! & 8 & \#¡NULO! & \#¡NULO! & 2 & \#¡NULO! & \#¡NULO! & 3 & \#¡NULO! & \#¡NULO! & 6 & 6 & \#¡NULO! & \#¡NULO! & 8 & \#¡NULO! & \#¡NULO! & 2 & 2 & \#¡NULO! & \#¡NULO! & 999 & 999 & 999 & 999 & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & 8 & 2 & 4 & 2 & 8 & 8 & 4 & 2 & 4 & 2 & 2 & 4 & 2 & 2 & 1 & 2 & 2 & 3 & 2 & 2 & 2 & 2 & 1 & 59 & 3 & 8 & 1957 & 12 & 4 & 2 & 3 & 9 & 2 & 2 & 2 & - & 1 & 1 & 5 & 1 & 1 & 0 & 99 & 0 & 99 & 8 & 8 & 1 & 1 & 4 & 1 & 1 & 2 & 2 & 1 & 2 & 1 & 1 & 1 & 2 & 1 & 1 & 2 & 1 & 2 & 2 & 2 & 2 & 2 & TEMUCO & 2 & 5 & 9 & 1 & 1 & 3.00 & 2.00 & 3.00 & 2.00
 \end{longtable}
 
-
+\end{document}
