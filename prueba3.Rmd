@@ -1,0 +1,541 @@
+---
+documentclass: article
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage{graphicx}
+- \usepackage{booktabs}
+#- \usepackage[table,xcdraw]{xcolor}
+- \usepackage[normalem]{ulem}
+- \usepackage[Lenny]{fncychap}
+#- \usepackage[spanish]{babel}
+- \usepackage[labelfont=bf]{caption}
+- \usepackage{longtable}
+- \usepackage{float}
+- \usepackage{fancyhdr}
+- \usepackage{fancyheadings}
+- \pagestyle{fancy}
+- \lhead{\scriptsize Paquete R 2022.}
+- \chead{\textbf{El Gordito }}
+- \rhead{\scriptsize \leftmark}
+- \lfoot{\textit{www.gritos.org}}
+- \rfoot{\thepage}
+title: "CADENAS DE MARKOV"
+output: pdf_document
+date: '2022-07-25'
+lang: es-ES
+toc: TRUE
+---
+\newpage
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+| Sex 	| **Wr.Hnd** 	| _NW.Hnd_ 	| W.Hnd 	| Fold 	| Pulse 	| Clap 	| Exer 	|
+|---	|:---:	|---	|---	|---	|---	|---	|---	|
+| Female 	| 18.5 	| 18 	| Right 	| R on L 	| 92 	| Left 	| Some 	|
+| Male 	| 19.5 	| 20.5 	| Left 	| R on L 	| 104 	| Left 	| None 	|
+| Male 	| 18 	| 13.3 	| Right 	| L on R 	| 87 	| Neither 	| None 	|
+| Male 	| 18.8 	| 18.9 	| Right 	| R on L 	| NA 	| Neither 	| None 	|
+| Male 	| 20 	| 20 	| Right 	| Neither 	| 35 	| Right 	| Some 	|
+| Female 	| 18 	| 17.7 	| Right 	| L on R 	| 64 	| Right 	| Some 	|
+| Male 	| 17.7 	| 17.7 	| Right 	| L on R 	| 83 	| Right 	| Freq 	|
+| Female 	| 17 	| 17.3 	| Right 	| R on L 	| 74 	| Right 	| Freq 	|
+| Male 	| 20 	| 19.5 	| Right 	| R on L 	| 72 	| Right 	| Some 	|
+| Male 	| 18.5 	| 18.5 	| Right 	| R on L 	| 90 	| Right 	| Some 	|
+| Female 	| 17 	| 17.2 	| Right 	| L on R 	| 80 	| Right 	| Freq 	|
+| Male 	| 21 	| 21 	| Right 	| R on L 	| 68 	| Left 	| Freq 	|
+| Female 	| 16 	| 16 	| Right 	| L on R 	| NA 	| Right 	| Some 	|
+| Female 	| 19.5 	| 20.2 	| Right 	| L on R 	| 66 	| Neither 	| Some 	|
+| Male 	| 16 	| 15.5 	| Right 	| R on L 	| 60 	| Right 	| Some 	|
+| Female 	| 17.5 	| 17 	| Right 	| R on L 	| NA 	| Right 	| Freq 	|
+| Female 	| 18 	| 18 	| Right 	| L on R 	| 89 	| Neither 	| Freq 	|
+| Male 	| 19.4 	| 19.2 	| Left 	| R on L 	| 74 	| Right 	| Some 	|
+| Male 	| 20.5 	| 20.5 	| Right 	| L on R 	| NA 	| Left 	| Some 	|
+| Male 	| 21 	| 20.9 	| Right 	| R on L 	| 78 	| Right 	| Freq 	|
+| Male 	| 21.5 	| 22 	| Right 	| R on L 	| 72 	| Left 	| Freq 	|
+| Male 	| 20.1 	| 20.7 	| Right 	| L on R 	| 72 	| Right 	| Freq 	|
+| Male 	| 18.5 	| 18 	| Right 	| L on R 	| 64 	| Right 	| Freq 	|
+| Male 	| 21.5 	| 21.2 	| Right 	| R on L 	| 62 	| Right 	| Some 	|
+| Female 	| 17 	| 17.5 	| Right 	| R on L 	| 64 	| Left 	| Some 	|
+| Male 	| 18.5 	| 18.5 	| Right 	| Neither 	| 90 	| Neither 	| Some 	|
+| Male 	| 21 	| 20.7 	| Right 	| R on L 	| 90 	| Right 	| Some 	|
+| Male 	| 20.8 	| 21.4 	| Right 	| R on L 	| 62 	| Neither 	| Freq 	|
+| Male 	| 17.8 	| 17.8 	| Right 	| L on R 	| 76 	| Neither 	| Freq 	|
+| Male 	| 19.5 	| 19.5 	| Right 	| L on R 	| 79 	| Right 	| Some 	|
+| Female 	| 18.5 	| 18 	| Right 	| R on L 	| 76 	| Right 	| None 	|
+| Male 	| 18.8 	| 18.2 	| Right 	| L on R 	| 78 	| Right 	| Freq 	|
+| Female 	| 17.1 	| 17.5 	| Right 	| R on L 	| 72 	| Right 	| Freq 	|
+| Male 	| 20.1 	| 20 	| Right 	| R on L 	| 70 	| Right 	| Some 	|
+| Male 	| 18 	| 19 	| Right 	| L on R 	| 54 	| Neither 	| Some 	|
+| Male 	| 22.2 	| 21 	| Right 	| L on R 	| 66 	| Right 	| Freq 	|
+| Female 	| 16 	| 16.5 	| Right 	| L on R 	| NA 	| Right 	| Some 	|
+| Male 	| 19.4 	| 18.5 	| Right 	| R on L 	| 72 	| Neither 	| Freq 	|
+| Male 	| 22 	| 22 	| Right 	| R on L 	| 80 	| Right 	| Some 	|
+| Male 	| 19 	| 19 	| Right 	| R on L 	| NA 	| Neither 	| Freq 	|
+| Female 	| 17.5 	| 16 	| Right 	| L on R 	| NA 	| Right 	| Some 	|
+| Female 	| 17.8 	| 18 	| Right 	| R on L 	| 72 	| Right 	| Some 	|
+| Male 	| NA 	| NA 	| Right 	| R on L 	| 60 	| NA 	| Some 	|
+| Female 	| 20.1 	| 20.2 	| Right 	| L on R 	| 80 	| Right 	| Some 	|
+| Female 	| 13 	| 13 	| NA 	| L on R 	| 70 	| Left 	| Freq 	|
+| Male 	| 17 	| 17.5 	| Right 	| R on L 	| NA 	| Neither 	| Freq 	|
+| Male 	| 23.2 	| 22.7 	| Right 	| L on R 	| 84 	| Left 	| Freq 	|
+| Male 	| 22.5 	| 23 	| Right 	| R on L 	| 96 	| Right 	| None 	|
+| Female 	| 18 	| 17.6 	| Right 	| R on L 	| 60 	| Right 	| Some 	|
+| Female 	| 18 	| 17.9 	| Right 	| R on L 	| 50 	| Left 	| None 	|
+| Male 	| 22 	| 21.5 	| Left 	| R on L 	| 55 	| Left 	| Freq 	|
+| Male 	| 20.5 	| 20 	| Right 	| L on R 	| 68 	| Right 	| Freq 	|
+| Male 	| 17 	| 18 	| Right 	| L on R 	| 78 	| Left 	| Some 	|
+| Male 	| 20.5 	| 19.5 	| Right 	| L on R 	| 56 	| Right 	| Freq 	|
+| Male 	| 22.5 	| 22.5 	| Right 	| R on L 	| 65 	| Right 	| Freq 	|
+| Male 	| 18.5 	| 18.5 	| Right 	| L on R 	| NA 	| Neither 	| Freq 	|
+| Female 	| 15.5 	| 15.4 	| Right 	| R on L 	| 70 	| Neither 	| None 	|
+| Male 	| 19.5 	| 19.7 	| Right 	| R on L 	| 72 	| Right 	| Freq 	|
+| Male 	| 19.5 	| 19 	| Right 	| L on R 	| 62 	| Right 	| Freq 	|
+| Male 	| 20.6 	| 21 	| Left 	| L on R 	| NA 	| Left 	| Freq 	|
+| Male 	| 22.8 	| 23.2 	| Right 	| R on L 	| 66 	| Neither 	| Freq 	|
+| Female 	| 18.5 	| 18.2 	| Right 	| R on L 	| 72 	| Neither 	| Freq 	|
+| Female 	| 19.6 	| 19.7 	| Right 	| L on R 	| 70 	| Right 	| Freq 	|
+| Female 	| 18.7 	| 18 	| Left 	| L on R 	| NA 	| Left 	| None 	|
+| Female 	| 17.3 	| 18 	| Right 	| L on R 	| 64 	| Neither 	| Freq 	|
+| Male 	| 19.5 	| 19.8 	| Right 	| Neither 	| NA 	| Right 	| Freq 	|
+| Female 	| 19 	| 19.1 	| Right 	| L on R 	| NA 	| Neither 	| Freq 	|
+| Female 	| 18.5 	| 18 	| Right 	| R on L 	| 64 	| Right 	| Freq 	|
+| Male 	| 19 	| 19 	| Right 	| L on R 	| NA 	| Right 	| Some 	|
+| Male 	| 21 	| 19.5 	| Right 	| L on R 	| 80 	| Left 	| None 	|
+| Female 	| 18 	| 17.5 	| Right 	| L on R 	| 64 	| Left 	| Freq 	|
+| Male 	| 19.4 	| 19.5 	| Right 	| R on L 	| NA 	| Right 	| Freq 	|
+| Female 	| 17 	| 16.6 	| Right 	| R on L 	| 68 	| Right 	| Some 	|
+| Female 	| 16.5 	| 17 	| Right 	| L on R 	| 40 	| Left 	| Freq 	|
+| Female 	| 15.6 	| 15.8 	| Right 	| R on L 	| 88 	| Left 	| Some 	|
+| Female 	| 17.5 	| 17.5 	| Right 	| Neither 	| 68 	| Right 	| Freq 	|
+| Female 	| 17 	| 17.6 	| Right 	| L on R 	| 76 	| Right 	| Some 	|
+| Female 	| 18.6 	| 18 	| Right 	| L on R 	| NA 	| Neither 	| Freq 	|
+| Female 	| 18.3 	| 18.5 	| Right 	| R on L 	| 68 	| Neither 	| Some 	|
+| Male 	| 20 	| 20.5 	| Right 	| L on R 	| NA 	| Right 	| Freq 	|
+| Male 	| 19.5 	| 19.5 	| Left 	| R on L 	| 66 	| Left 	| Some 	|
+| Male 	| 19.2 	| 18.9 	| Right 	| R on L 	| 76 	| Right 	| Freq 	|
+| Female 	| 17.5 	| 17.5 	| Right 	| R on L 	| 98 	| Left 	| Freq 	|
+| Female 	| 17 	| 17.4 	| Right 	| R on L 	| NA 	| Neither 	| Some 	|
+| Male 	| 23 	| 23.5 	| Right 	| L on R 	| 90 	| Right 	| Freq 	|
+| Female 	| 17.7 	| 17 	| Right 	| R on L 	| 76 	| Right 	| Some 	|
+| Female 	| 18.2 	| 18 	| Right 	| L on R 	| 70 	| Right 	| Some 	|
+| Female 	| 18.3 	| 18.5 	| Right 	| R on L 	| 75 	| Left 	| Freq 	|
+| Male 	| 18 	| 18 	| Right 	| Neither 	| 60 	| Right 	| Freq 	|
+| Female 	| 18 	| 17.7 	| Left 	| R on L 	| 92 	| Left 	| Some 	|
+| Male 	| 20.5 	| 20 	| Right 	| R on L 	| 75 	| Left 	| Some 	|
+| Female 	| 17.5 	| 18 	| Right 	| Neither 	| NA 	| Right 	| Some 	|
+| Female 	| 18.2 	| 17.5 	| Right 	| L on R 	| 70 	| Right 	| Some 	|
+| Female 	| 18.2 	| 18.5 	| Right 	| R on L 	| NA 	| Right 	| Some 	|
+| Male 	| 21.3 	| 20.8 	| Right 	| R on L 	| 65 	| Right 	| Freq 	|
+| Female 	| 19 	| 18.8 	| Right 	| L on R 	| NA 	| Right 	| Some 	|
+| Male 	| 20 	| 19.5 	| Right 	| R on L 	| 68 	| Neither 	| Freq 	|
+| Female 	| 17.5 	| 17.5 	| Right 	| R on L 	| 60 	| Right 	| Freq 	|
+| Male 	| 19.5 	| 19.4 	| Right 	| Neither 	| NA 	| Right 	| Freq 	|
+| Female 	| 19.4 	| 19.6 	| Right 	| R on L 	| 68 	| Neither 	| Freq 	|
+| Male 	| 21.9 	| 22.2 	| Right 	| R on L 	| NA 	| Right 	| Some 	|
+| Male 	| 18.9 	| 19.1 	| Right 	| L on R 	| 60 	| Neither 	| None 	|
+| Female 	| 16 	| 16 	| Right 	| Neither 	| NA 	| Right 	| Some 	|
+| Female 	| 17.5 	| 17.3 	| Right 	| R on L 	| 72 	| Right 	| Freq 	|
+| Female 	| 17.5 	| 17 	| Right 	| R on L 	| 80 	| Left 	| Some 	|
+| Female 	| 19.5 	| 18.5 	| Right 	| R on L 	| 80 	| Right 	| Some 	|
+| Female 	| 16.2 	| 16.4 	| Right 	| R on L 	| NA 	| Right 	| Freq 	|
+| Female 	| 17 	| 15.9 	| Right 	| R on L 	| 85 	| Right 	| Freq 	|
+| Male 	| 17.5 	| 17.5 	| Right 	| L on R 	| 64 	| Neither 	| Freq 	|
+| Male 	| 19.7 	| 20.1 	| Right 	| R on L 	| 67 	| Left 	| Some 	|
+| Female 	| 18.5 	| 18.5 	| Right 	| R on L 	| 76 	| Left 	| Freq 	|
+| Male 	| 19.2 	| 19.6 	| Right 	| L on R 	| 80 	| Right 	| None 	|
+| Female 	| 17.2 	| 16.7 	| Right 	| R on L 	| 75 	| Right 	| Freq 	|
+| Male 	| 20.5 	| 21 	| Right 	| R on L 	| 60 	| Right 	| Freq 	|
+| Female 	| 16 	| 15.5 	| Right 	| L on R 	| 60 	| Left 	| Freq 	|
+| Female 	| 16.9 	| 16 	| Right 	| L on R 	| 70 	| Right 	| None 	|
+| Female 	| 17 	| 16.7 	| Right 	| R on L 	| 70 	| Right 	| Some 	|
+| Male 	| 23 	| 22 	| Left 	| L on R 	| 83 	| Left 	| Some 	|
+| Female 	| 18.5 	| 18 	| Left 	| L on R 	| 100 	| Neither 	| Some 	|
+| Male 	| 21 	| 20.4 	| Right 	| L on R 	| 100 	| Right 	| Freq 	|
+| Male 	| 20 	| 20 	| Right 	| R on L 	| 80 	| Neither 	| Freq 	|
+| Male 	| 22.5 	| 22.5 	| Right 	| L on R 	| 76 	| Right 	| Freq 	|
+| Female 	| 18.5 	| 18 	| Right 	| R on L 	| 92 	| Right 	| Freq 	|
+| Male 	| 19.8 	| 20 	| Left 	| L on R 	| 59 	| Right 	| Freq 	|
+| Male 	| 18.5 	| 18.1 	| Right 	| L on R 	| 66 	| Left 	| Freq 	|
+| Male 	| 19.3 	| 19.4 	| Right 	| R on L 	| NA 	| Right 	| Freq 	|
+| Female 	| 16 	| 16 	| Right 	| R on L 	| 68 	| Right 	| Freq 	|
+| Male 	| 18.8 	| 19.1 	| Right 	| L on R 	| 66 	| Neither 	| Freq 	|
+| Female 	| 17.5 	| 17 	| Right 	| R on L 	| 74 	| Right 	| Freq 	|
+| Female 	| 16.4 	| 16.5 	| Right 	| L on R 	| 90 	| Right 	| Some 	|
+| Male 	| 22 	| 21.5 	| Right 	| R on L 	| 86 	| Right 	| Freq 	|
+| Male 	| 19 	| 19.5 	| Right 	| L on R 	| 60 	| Right 	| Some 	|
+| Female 	| 18.9 	| 20 	| Right 	| R on L 	| 86 	| Right 	| Some 	|
+| Female 	| 15.4 	| 16.4 	| Left 	| L on R 	| 80 	| Left 	| Freq 	|
+| Male 	| 17.9 	| 17.8 	| Right 	| R on L 	| 85 	| Left 	| Some 	|
+| Male 	| 23.1 	| 22.5 	| Right 	| L on R 	| 90 	| Right 	| Some 	|
+| NA 	| 19.8 	| 19 	| Left 	| L on R 	| 73 	| Neither 	| Freq 	|
+| Male 	| 22 	| 22 	| Right 	| L on R 	| 72 	| Right 	| Freq 	|
+| Male 	| 20 	| 19.5 	| Right 	| L on R 	| NA 	| Right 	| Freq 	|
+| Female 	| 19.5 	| 18.5 	| Right 	| L on R 	| 68 	| Right 	| None 	|
+| Female 	| 18 	| 18.6 	| Right 	| R on L 	| 84 	| Right 	| Some 	|
+| Female 	| 18.3 	| 19 	| Right 	| R on L 	| NA 	| Right 	| None 	|
+| Female 	| 19 	| 18.8 	| Right 	| R on L 	| 65 	| Right 	| Freq 	|
+| Male 	| 21.4 	| 21 	| Right 	| L on R 	| 96 	| Neither 	| Some 	|
+| Female 	| 20 	| 19.5 	| Left 	| R on L 	| 68 	| Neither 	| Freq 	|
+| Male 	| 18.5 	| 18.5 	| Right 	| R on L 	| 75 	| Neither 	| Some 	|
+| Male 	| 22.5 	| 22.6 	| Right 	| L on R 	| 64 	| Right 	| Freq 	|
+| Male 	| 19.5 	| 20.2 	| Right 	| R on L 	| 60 	| Neither 	| Freq 	|
+| Female 	| 18 	| 18 	| Right 	| L on R 	| 92 	| Neither 	| Freq 	|
+| Female 	| 18 	| 18.5 	| Right 	| R on L 	| 64 	| Neither 	| Freq 	|
+| Male 	| 21.8 	| 22.3 	| Right 	| R on L 	| 76 	| Left 	| Freq 	|
+| Female 	| 13 	| 12.5 	| Right 	| L on R 	| 80 	| Right 	| Freq 	|
+| Female 	| 16.3 	| 16.2 	| Right 	| L on R 	| 92 	| Right 	| Some 	|
+| Male 	| 21.5 	| 21.6 	| Right 	| R on L 	| 69 	| Right 	| Freq 	|
+| Male 	| 18.9 	| 19.1 	| Right 	| L on R 	| 68 	| Right 	| None 	|
+| Male 	| 20.5 	| 20 	| Right 	| R on L 	| 76 	| Right 	| Freq 	|
+| Male 	| 14 	| 15.5 	| Right 	| L on R 	| NA 	| Neither 	| Freq 	|
+| Female 	| 18.9 	| 19.2 	| Right 	| L on R 	| 74 	| Right 	| Some 	|
+| Male 	| 20 	| 20.5 	| Right 	| R on L 	| NA 	| Right 	| None 	|
+| Male 	| 18.5 	| 19 	| Right 	| L on R 	| 84 	| Right 	| Freq 	|
+| Female 	| 17.5 	| 17.1 	| Right 	| R on L 	| 80 	| Left 	| None 	|
+| Male 	| 18.1 	| 18.2 	| Left 	| Neither 	| NA 	| Right 	| Some 	|
+| Male 	| 20.2 	| 20.3 	| Right 	| L on R 	| 72 	| Neither 	| Some 	|
+| Female 	| 16.5 	| 16.9 	| Right 	| R on L 	| 60 	| Neither 	| Freq 	|
+| Male 	| 19.1 	| 19.1 	| Right 	| Neither 	| NA 	| Right 	| Some 	|
+| Female 	| 17.6 	| 17.2 	| Right 	| R on L 	| 81 	| Left 	| Some 	|
+| Female 	| 19.5 	| 19.2 	| Right 	| R on L 	| 70 	| Right 	| Some 	|
+| Female 	| 16.5 	| 15 	| Right 	| L on R 	| 65 	| Right 	| Some 	|
+| Male 	| 19 	| 18.5 	| Right 	| L on R 	| NA 	| Neither 	| Freq 	|
+| Male 	| 19 	| 18.5 	| Right 	| R on L 	| 72 	| Right 	| Freq 	|
+| Female 	| 16.5 	| 17 	| Right 	| L on R 	| NA 	| Right 	| Some 	|
+| Male 	| 20.5 	| 19.5 	| Left 	| L on R 	| 80 	| Right 	| Some 	|
+| Female 	| 15.5 	| 15.5 	| Right 	| Neither 	| 50 	| Right 	| Some 	|
+| Female 	| 18 	| 17.5 	| Right 	| R on L 	| 48 	| Neither 	| Freq 	|
+| Female 	| 17.5 	| 18 	| Right 	| R on L 	| 68 	| Neither 	| Freq 	|
+| Female 	| 19 	| 18.5 	| Left 	| L on R 	| 104 	| Left 	| Freq 	|
+| Male 	| 20.5 	| 20.5 	| Right 	| Neither 	| 76 	| Right 	| Freq 	|
+| Female 	| 16.7 	| 17 	| Right 	| L on R 	| 84 	| Left 	| Freq 	|
+| Female 	| 20.5 	| 20.5 	| Right 	| R on L 	| NA 	| Left 	| Freq 	|
+| Female 	| 17 	| 16.5 	| Right 	| R on L 	| 70 	| Right 	| Some 	|
+| Male 	| 19 	| 19.5 	| Right 	| R on L 	| 68 	| Right 	| Freq 	|
+| Female 	| 14 	| 13.5 	| Right 	| R on L 	| 87 	| Neither 	| Freq 	|
+| Female 	| 17.5 	| 17.6 	| Right 	| L on R 	| 79 	| Right 	| Some 	|
+| Male 	| 18.5 	| 19 	| Right 	| L on R 	| 70 	| Left 	| Freq 	|
+| Male 	| 18 	| 18.5 	| Right 	| Neither 	| 90 	| Right 	| Some 	|
+| Male 	| 20.5 	| 20.7 	| Right 	| R on L 	| 72 	| Right 	| Some 	|
+| Female 	| 17 	| 17 	| Right 	| L on R 	| 79 	| Right 	| Some 	|
+| Male 	| 18.5 	| 18.5 	| Right 	| R on L 	| 65 	| Right 	| None 	|
+| Male 	| 18 	| 18.5 	| Right 	| R on L 	| 62 	| Right 	| Freq 	|
+| Male 	| 18.5 	| 18 	| Right 	| Neither 	| 63 	| Neither 	| Freq 	|
+| Male 	| 20 	| 19.5 	| Right 	| R on L 	| 92 	| Right 	| Some 	|
+| Male 	| 22 	| 22.5 	| Right 	| L on R 	| 60 	| Right 	| Some 	|
+| Male 	| 17.9 	| 18.4 	| Right 	| R on L 	| 68 	| Left 	| None 	|
+| Female 	| 17.6 	| 17.8 	| Right 	| L on R 	| 72 	| Left 	| Some 	|
+| Female 	| 16.7 	| 15.1 	| Right 	| Neither 	| NA 	| Right 	| None 	|
+| Female 	| 17 	| 17.6 	| Right 	| L on R 	| 76 	| Right 	| Some 	|
+| Female 	| 15 	| 13 	| Right 	| R on L 	| 80 	| Neither 	| Freq 	|
+| Male 	| 16 	| 15.5 	| Right 	| Neither 	| 71 	| Right 	| Freq 	|
+| Female 	| 19.1 	| 19 	| Right 	| R on L 	| 80 	| Right 	| Some 	|
+| Female 	| 17.5 	| 16.5 	| Right 	| R on L 	| 80 	| Neither 	| Some 	|
+| Female 	| 16.2 	| 15.8 	| Right 	| R on L 	| 61 	| Right 	| Some 	|
+| Male 	| 21 	| 21 	| Right 	| L on R 	| 48 	| Neither 	| Freq 	|
+| Female 	| 18.8 	| 17.8 	| Right 	| R on L 	| 76 	| Right 	| Some 	|
+| Female 	| 18.5 	| 18 	| Right 	| Neither 	| 86 	| Right 	| None 	|
+| Male 	| 17 	| 17.5 	| Right 	| R on L 	| 80 	| Right 	| Some 	|
+| Female 	| 17.5 	| 17 	| Right 	| R on L 	| 83 	| Neither 	| Freq 	|
+| Female 	| 17.5 	| 17.6 	| Right 	| L on R 	| 76 	| Right 	| Some 	|
+| Male 	| 17.5 	| 17.6 	| Right 	| R on L 	| 84 	| Right 	| Some 	|
+| Male 	| 17.5 	| 17 	| Left 	| L on R 	| 97 	| Neither 	| None 	|
+| Female 	| 20.8 	| 20.7 	| Right 	| R on L 	| NA 	| Neither 	| Freq 	|
+| Female 	| 18.6 	| 18.6 	| Right 	| L on R 	| 74 	| Right 	| Some 	|
+| Female 	| 17.5 	| 17.5 	| Left 	| R on L 	| 83 	| Neither 	| Some 	|
+| Male 	| 18 	| 18.5 	| Right 	| R on L 	| 78 	| Right 	| Freq 	|
+| Male 	| 17 	| 17.5 	| Right 	| R on L 	| 65 	| Right 	| Some 	|
+| Female 	| 18 	| 17.8 	| Right 	| L on R 	| 68 	| Right 	| Some 	|
+| Male 	| 19.5 	| 20 	| Right 	| Neither 	| NA 	| Right 	| Some 	|
+| Female 	| 16.3 	| 16.2 	| Right 	| L on R 	| NA 	| Right 	| None 	|
+| Male 	| 18.2 	| 19.8 	| Right 	| R on L 	| 88 	| Right 	| Freq 	|
+| Female 	| 17 	| 17.3 	| Right 	| L on R 	| NA 	| Neither 	| Freq 	|
+| Male 	| 23.2 	| 23.2 	| Right 	| L on R 	| 75 	| Right 	| Freq 	|
+| Male 	| 23.2 	| 23.3 	| Right 	| L on R 	| NA 	| Right 	| None 	|
+| Female 	| 15.9 	| 16.5 	| Right 	| R on L 	| 70 	| Right 	| Freq 	|
+| Female 	| 17.5 	| 18.4 	| Right 	| R on L 	| 88 	| Right 	| Some 	|
+| Female 	| 17.5 	| 17.6 	| Right 	| L on R 	| NA 	| Right 	| Freq 	|
+| Female 	| 17.6 	| 17.2 	| Right 	| L on R 	| NA 	| Right 	| Some 	|
+| Female 	| 17.5 	| 17.8 	| Right 	| R on L 	| 96 	| Right 	| Some 	|
+| Female 	| 18.8 	| 18.3 	| Right 	| R on L 	| 80 	| Right 	| Some 	|
+| Male 	| 20 	| 19.8 	| Right 	| L on R 	| 68 	| Right 	| Freq 	|
+| Female 	| 18.6 	| 18.8 	| Right 	| L on R 	| 70 	| Right 	| Freq 	|
+| Male 	| 18.6 	| 19.6 	| Right 	| L on R 	| 71 	| Right 	| Freq 	|
+| Female 	| 18.8 	| 18.5 	| Right 	| R on L 	| 80 	| Right 	| Some 	|
+| Male 	| 18 	| 16 	| Right 	| R on L 	| NA 	| Right 	| Some 	|
+| Female 	| 18 	| 18 	| Right 	| L on R 	| 85 	| Right 	| Some 	|
+| Female 	| 18.5 	| 18 	| Right 	| L on R 	| 88 	| Right 	| Some 	|
+| Female 	| 17.5 	| 16.5 	| Right 	| R on L 	| NA 	| Right 	| Some 	|
+| Male 	| 21 	| 21.5 	| Right 	| R on L 	| 90 	| Right 	| Some 	|
+| Female 	| 17.6 	| 17.3 	| Right 	| R on L 	| 85 	| Right 	| Freq 	|
+
+
+
+
+\begin{longtable}[c]{@{}llllllll@{}}
+\toprule
+Sex & \multicolumn{1}{c}{ Wr.Hnd} & \multicolumn{1}{c}{NW.Hnd} & \textbf{W.Hnd} & \multicolumn{1}{c}{{Fold}} & Pulse & Clap & Exer \\* \midrule
+\endfirsthead
+%
+\endhead
+%
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{92} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{104} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{13.3} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{87} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{18.9} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{35} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{17.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17.7} & \multicolumn{1}{l|}{17.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{83} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.3} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{74} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{90} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{20.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{66} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{15.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{89} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.4} & \multicolumn{1}{l|}{19.2} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{74} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{20.9} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{78} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21.5} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.1} & \multicolumn{1}{l|}{20.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21.5} & \multicolumn{1}{l|}{21.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{62} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{90} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{20.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{90} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.8} & \multicolumn{1}{l|}{21.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{62} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17.8} & \multicolumn{1}{l|}{17.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{79} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{18.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{78} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.1} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.1} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{54} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22.2} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{66} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.4} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.8} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{20.1} & \multicolumn{1}{l|}{20.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{13} & \multicolumn{1}{l|}{13} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{23.2} & \multicolumn{1}{l|}{22.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{84} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22.5} & \multicolumn{1}{l|}{23} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{96} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{17.9} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{50} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{21.5} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{55} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{78} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{56} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22.5} & \multicolumn{1}{l|}{22.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{65} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{15.5} & \multicolumn{1}{l|}{15.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{19.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{62} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.6} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22.8} & \multicolumn{1}{l|}{23.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{66} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19.6} & \multicolumn{1}{l|}{19.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.7} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.3} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{19.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{19.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.4} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{16.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{40} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{15.6} & \multicolumn{1}{l|}{15.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{88} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.6} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.3} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{66} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.2} & \multicolumn{1}{l|}{18.9} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{98} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{23} & \multicolumn{1}{l|}{23.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{90} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.7} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.2} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.3} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{75} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{17.7} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{92} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{75} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.2} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.2} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21.3} & \multicolumn{1}{l|}{20.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{65} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{19.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19.4} & \multicolumn{1}{l|}{19.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21.9} & \multicolumn{1}{l|}{22.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.9} & \multicolumn{1}{l|}{19.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.3} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.2} & \multicolumn{1}{l|}{16.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{15.9} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{85} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.7} & \multicolumn{1}{l|}{20.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{67} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.2} & \multicolumn{1}{l|}{19.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.2} & \multicolumn{1}{l|}{16.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{75} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{15.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.9} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{16.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{23} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{83} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{100} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{20.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{100} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22.5} & \multicolumn{1}{l|}{22.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{92} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.8} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{59} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{66} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.3} & \multicolumn{1}{l|}{19.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{19.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{66} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{74} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.4} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{90} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{21.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{86} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.9} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{86} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{15.4} & \multicolumn{1}{l|}{16.4} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17.9} & \multicolumn{1}{l|}{17.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{85} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{23.1} & \multicolumn{1}{l|}{22.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{90} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{NA} & \multicolumn{1}{l|}{19.8} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{73} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{84} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.3} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{65} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21.4} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{96} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{75} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22.5} & \multicolumn{1}{l|}{22.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{20.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{92} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{64} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21.8} & \multicolumn{1}{l|}{22.3} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{13} & \multicolumn{1}{l|}{12.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.3} & \multicolumn{1}{l|}{16.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{92} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21.5} & \multicolumn{1}{l|}{21.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{69} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.9} & \multicolumn{1}{l|}{19.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{14} & \multicolumn{1}{l|}{15.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.9} & \multicolumn{1}{l|}{19.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{74} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{84} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.1} & \multicolumn{1}{l|}{18.2} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.2} & \multicolumn{1}{l|}{20.3} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{16.9} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.1} & \multicolumn{1}{l|}{19.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{17.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{81} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{19.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{15} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{65} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{15.5} & \multicolumn{1}{l|}{15.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{50} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{48} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{104} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.7} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{84} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{14} & \multicolumn{1}{l|}{13.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{87} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{79} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{90} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20.5} & \multicolumn{1}{l|}{20.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{79} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{65} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{62} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{63} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{92} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{22} & \multicolumn{1}{l|}{22.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17.9} & \multicolumn{1}{l|}{18.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{17.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{72} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.7} & \multicolumn{1}{l|}{15.1} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{15} & \multicolumn{1}{l|}{13} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{15.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{71} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{19.1} & \multicolumn{1}{l|}{19} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.2} & \multicolumn{1}{l|}{15.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{61} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{48} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{17.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{86} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{83} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{76} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{84} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{97} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{20.8} & \multicolumn{1}{l|}{20.7} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.6} & \multicolumn{1}{l|}{18.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{74} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Left} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{83} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{78} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{65} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{17.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{19.5} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{16.3} & \multicolumn{1}{l|}{16.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.2} & \multicolumn{1}{l|}{19.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{88} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17} & \multicolumn{1}{l|}{17.3} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Neither} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{23.2} & \multicolumn{1}{l|}{23.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{75} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{23.2} & \multicolumn{1}{l|}{23.3} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{None} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{15.9} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{18.4} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{88} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{17.2} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{17.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{96} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{18.3} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{20} & \multicolumn{1}{l|}{19.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{68} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.6} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{70} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18.6} & \multicolumn{1}{l|}{19.6} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{71} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Freq} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.8} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{80} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{16} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{85} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{18.5} & \multicolumn{1}{l|}{18} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{L on R} & \multicolumn{1}{l|}{88} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Female} & \multicolumn{1}{l|}{17.5} & \multicolumn{1}{l|}{16.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{NA} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+\multicolumn{1}{|l|}{Male} & \multicolumn{1}{l|}{21} & \multicolumn{1}{l|}{21.5} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{R on L} & \multicolumn{1}{l|}{90} & \multicolumn{1}{l|}{Right} & \multicolumn{1}{l|}{Some} \\* \midrule
+Female & 17.6 & 17.3 & Right & R on L & 85 & Right & Freq \\* \bottomrule
+\end{longtable}
+

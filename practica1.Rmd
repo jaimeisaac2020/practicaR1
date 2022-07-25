@@ -1,8 +1,11 @@
 ---
-documentclass: article
 title: "practica1"
-output: pdf_document
+author: "Jaime"
 date: '2022-07-07'
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 header-includes:
 - \usepackage[utf8]{inputenc}
 - \usepackage{graphicx}
@@ -16,15 +19,9 @@ header-includes:
 - \chead{}
 - \rhead{\scriptsize \leftmark}
 - \lfoot{\textit{www.gritos.org}}
-#- \cfoot{\includegraphics[height=0.08\textwidth]{imag/logo1.jpg}}
 - \rfoot{\thepage}
-#title: "Manual de R para el científico de datos"
-author: "Jaime"
-#date: 2017
-#language: ES-es
+documentclass: article
 lang: es-ES
-
-
 ---
 \newpage
 \tableofcontents
@@ -215,4 +212,27 @@ VOTACION\_1 & VOTACION\_2 & VOTACION\_3 & VOTACION\_4 & SV\_1 & SV\_2 & MB\_P1\_
 8 & 1 & 1 & 4 & 7 & 3 & 3 & 4 & 16 & 3 & 2 & 2 & 3 & 2 & 2 & 2 & 2 & 1 & 2 & 88 & 4 & 5 & 8 & 6 & 6 & 2 & 6 & 4 & 6 & 6 & 6 & 3 & 6 & 6 & 6 & 2 & 4 & 4 & 3 & 6 & 3 & 6 & 6 & 6 & 4 & 2 & 4 & 6 & 6 & 4 & 2 & 1 & 8 & 8 & 1 & 2 & 2 & 3 & 1 & 2 & 3 & 3 & 2 & 2 & 3 & 3 & 9 & 8 & 7 & 10 & 8 & 9 & 3 & 3 & 2 & 8 & 8 & 8 & 1 & 8 & 4 & 4 & 4 & 4 & 8 & 8 & 4 & 8 & 10 & 2 & 3 & 1 & 2 & 2 & 3 & 3 & 1 & 999 & 999 & 1 & \#¡NULO! & \#¡NULO! & 60 & \#¡NULO! & \#¡NULO! & 8 & \#¡NULO! & \#¡NULO! & 2 & \#¡NULO! & \#¡NULO! & 3 & \#¡NULO! & \#¡NULO! & 6 & 6 & \#¡NULO! & \#¡NULO! & 8 & \#¡NULO! & \#¡NULO! & 2 & 2 & \#¡NULO! & \#¡NULO! & 999 & 999 & 999 & 999 & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & \#¡NULO! & 8 & 2 & 4 & 2 & 8 & 8 & 4 & 2 & 4 & 2 & 2 & 4 & 2 & 2 & 1 & 2 & 2 & 3 & 2 & 2 & 2 & 2 & 1 & 59 & 3 & 8 & 1957 & 12 & 4 & 2 & 3 & 9 & 2 & 2 & 2 & - & 1 & 1 & 5 & 1 & 1 & 0 & 99 & 0 & 99 & 8 & 8 & 1 & 1 & 4 & 1 & 1 & 2 & 2 & 1 & 2 & 1 & 1 & 1 & 2 & 1 & 1 & 2 & 1 & 2 & 2 & 2 & 2 & 2 & TEMUCO & 2 & 5 & 9 & 1 & 1 & 3.00 & 2.00 & 3.00 & 2.00
 \end{longtable}
 
+```{r}
+library(dlookr)      # for exploratory data analysis and imputation
+plot_na_pareto(airquality, only_na = TRUE)
+```
 
+```{r}
+plot_na_intersect(airquality)
+```
+
+```{r}
+library(visdat)      # for visualizing NAs
+library(plotly)      # for interactive visualization
+vis_miss(airquality) %>% ggplotly()
+```
+
+```{r}
+blip <- imputate_na(airquality, Ozone, Solar.R, method = "mean")
+plot(blip)
+```
+```{r}
+blip
+```
+
+\includegraphics[width=8cm, height=5cm]{logo1.png}
