@@ -1,0 +1,105 @@
+---
+title: "Untitled"
+output: pdf_document
+date: "2022-08-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(reticulate)
+```
+```{r}
+reticulate::conda_install(packages = c("pandas","numpy","statsmodels","scipy"))
+```
+```{python}
+import numpy as np
+p=[6,6,25,0,9]
+np.roots(p)
+```
+
+```{python}
+import pandas as pd
+import numpy as np
+
+```
+```{python}
+data=pd.read_csv("iris.csv")
+```
+```{python}
+data.head(10)
+```
+
+```{python}
+data=pd.read_csv("iris.csv",header=0,index_col=4)
+data.head()
+```
+
+```{python}
+
+```
+
+```{python}
+#data=pd.read_csv("iris.csv",header=0,index_col=4,
+#names=["sepal.length","petal.width"])
+#data.head()
+```
+
+```{python}
+df=pd.read_csv("https://raw.githubusercontent.com/jaimeisaac2020/practicaR1/mi-github/Salaries.txt",
+sep="\t")
+df.head(8)
+```
+```{python}
+df['sex']
+```
+```{python}
+df.iloc[0:10,[0,1,3]]
+```
+```{python}
+df.loc[0:5,["rank","discipline","sex"]]
+```
+
+```{python}
+df.iloc[[1,3,5,20],[0,1,3]]
+
+```
+```{python}
+df['sex'].iloc[0:20]
+```
+```{python}
+df2=df.filter(items=["rank","discipline"])
+print(df2)
+```
+
+
+```{python}
+df[df.iloc[:,0]=='Prof']
+```
+```{python}
+mydata = pd.read_csv("http://winterolympicsmedals.com/medals.csv")
+mydata
+```
+
+```{python}
+mydata = pd.read_table("Salaries.txt")
+mydata.head()
+
+```
+```{r}
+reticulate::conda_install(packages = "openpyxl")
+```
+
+```{python}
+mydata = pd.read_excel("CEP_sep-oct_2017.xlsx",
+sheet_name="DATOS",skiprows=4,na_values=[''])
+mydata.head()
+```
+```{python}
+mydata = pd.read_excel("CEP_sep-oct_2017.xlsx",
+sheet_name="DATOS",skiprows=0,na_values=[''])
+mydata.head()
+```
+
